@@ -1,0 +1,14 @@
+.idea
+.vscode
+.project
+.settings
+.tmproj
+*.iml
+*_
+
+node_modules
+dist
+build
+tmp
+
+npm-debug.log
