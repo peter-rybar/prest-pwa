@@ -2,7 +2,7 @@
 import { JsonMLs } from "./prest/jsonml/jsonml";
 import { Widget } from "./prest/jsonml/jsonml-widget";
 import { Signal } from "./prest/signal";
-import { swRegister } from "./swregister";
+import { swInit, showNotification } from "./sw-lib";
 
 
 class HelloWidget extends Widget {
@@ -281,7 +281,7 @@ class AppWidget extends Widget {
 }
 
 
-swRegister();
+swInit();
 
 const app = new AppWidget();
 
@@ -293,6 +293,24 @@ app.mount(document.getElementById("app"));
 
 // app.mount(document.getElementById(app.id)); // SSR - server side rendering
 
+setTimeout(() => {
+    showNotification("Notif title", {
+        body: "Notif body",
+        icon: "assets/icons/ic-face.png",
+        tag: "notif-tag"
+        // vibrate: [200, 100, 200, 100, 200, 100, 200],
+        // data: {
+        //     dateOfArrival: Date.now(),
+        //     primaryKey: 1
+        // },
+        // actions: [
+        //     {action: 'explore', title: 'Explore this new world',
+        //         icon: 'images/checkmark.png'},
+        //     {action: 'close', title: 'Close notification',
+        //         icon: 'images/xmark.png'},
+        // ]
+    });
+}, 3000);
 
 (self as any).app = app;
 
