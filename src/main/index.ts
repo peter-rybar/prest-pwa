@@ -30,7 +30,12 @@ class HelloWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["input~i", { type: "text", value: this._name, input: this._onTextInput }],
+            ["h2.ui.header", this.type],
+            ["div.ui.input.left.icon",
+                ["input~i", { type: "text", value: this._name, input: this._onTextInput }],
+                ["i.icon.users"]
+            ],
+            ["div.ui.divider"],
             ["p", "Hello ", ["strong", this._name], " !"]
         ];
     }
@@ -84,11 +89,13 @@ class TimerWidget extends Widget {
 
     render(): JsonMLs {
         return [
+            ["h2.ui.header", this.type],
             ["p", { style: this._interval ? "" : "color: lightgray;" },
-                "Time: ", new Date().toLocaleTimeString(), " ",
-                ["button", { click: (e: Event) => this.toggle() },
-                    this._interval ? "Stop" : "Start"
-                ]
+                "Time: ", new Date().toLocaleTimeString(),
+            ],
+            ["button.ui.button.icon.labeled.tiny", { click: (e: Event) => this.toggle() },
+                ["i.icon", { classes: this._interval ? "pause" : "play"}],
+                this._interval ? "Stop" : "Start"
             ]
         ];
     }
@@ -148,20 +155,24 @@ class FormWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h2", this._title],
-            ["form", { submit: this._onFormSubmit },
-                ["p",
+            ["h2.ui.header", this.type,
+                ["div.sub.header", this._title]
+            ],
+            ["form.ui.form.error", { submit: this._onFormSubmit },
+                ["div.field.inline", { class: this._errors.name ? "error" : "" },
                     ["label", "Name ",
                         ["input~name",
                             {
                                 type: "text", size: 10, maxlength: 10,
+                                placeholder: "Name",
                                 input: this._onNameInput
                             }
                         ]
-                    ], " ",
-                    ["em.error", this._errors.name]
+                    ],
+                    ["div.error", this._errors.name]
                 ],
-                ["p",
+                // ["div.ui.message.error", this._errors.name],
+                ["div.field.inline", { class: this._errors.age ? "error" : "" },
                     ["label", "Age ",
                         ["input~age",
                             {
@@ -169,11 +180,12 @@ class FormWidget extends Widget {
                                 input: this._onAgeInput
                             }
                         ]
-                    ], " ",
-                    ["em.error", this._errors.age]
+                    ],
+                    ["div.error", this._errors.age]
                 ],
-                ["p",
-                    ["input~submit", { type: "submit", value: "Submit" }]
+                // ["div.ui.message.error", this._errors.age],
+                ["div.field",
+                    ["button.ui.button~submit", { type: "submit" }, "Submit"]
                 ]
             ],
             ["pre~data"]
@@ -221,11 +233,11 @@ class FormWidget extends Widget {
 
     private _validateAge(age: string) {
         if (age) {
-            if (isNaN(+age)) {
+            if (isNaN(Number(age))) {
                 this._data.age = undefined;
                 this._errors.age = "Invalid age number";
             } else {
-                this._data.age = +age;
+                this._data.age = Number(age);
                 this._errors.age = "";
             }
         } else {
@@ -269,12 +281,18 @@ class AppWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h1", this._title],
-            this.helloWidget,
-            ["hr"],
-            this.timerWidget,
-            ["hr"],
-            this.formWidget
+            ["h2.ui.header", this.type,
+                ["div.sub.header", this._title]
+            ],
+            ["div.ui.segment",
+                this.helloWidget
+            ],
+            ["div.ui.segment",
+                this.timerWidget
+            ],
+            ["div.ui.segment",
+                this.formWidget
+            ]
         ];
     }
 

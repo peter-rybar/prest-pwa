@@ -11,4 +11,7 @@ dist
 build
 tmp
 
+semantic
+semantic.json
+
 npm-debug.log

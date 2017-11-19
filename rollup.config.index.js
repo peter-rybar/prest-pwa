@@ -27,6 +27,10 @@ export default {
         uglify({}/*, minify*/),
         copy({
             "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib/incremental-dom-min.js",
+            "node_modules/jquery/dist/jquery.min.js": "dist/lib/jquery.min.js",
+            "node_modules/semantic-ui/dist/semantic.min.css": "dist/lib/semantic/semantic.min.css",
+            "node_modules/semantic-ui/dist/semantic.min.js": "dist/lib/semantic/semantic.min.js",
+            "node_modules/semantic-ui/dist/themes/default": "dist/lib/semantic/themes/default",
             verbose: true
         })
     ],
