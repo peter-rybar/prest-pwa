@@ -85,8 +85,12 @@ class TimerWidget extends Widget {
     render(): JsonMLs {
         return [
             ["p", { style: this._interval ? "" : "color: lightgray;" },
-                "Time: ", new Date().toLocaleTimeString(), " ",
-                ["button", { click: (e: Event) => this.toggle() },
+                "Time: ", new Date().toLocaleTimeString(), ["br"],
+                ["button.waves-effect.waves-light.btn",
+                    {
+                        type: "button",
+                        click: (e: Event) => this.toggle()
+                    },
                     this._interval ? "Stop" : "Start"
                 ]
             ]
@@ -148,7 +152,7 @@ class FormWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h2", this._title],
+            ["h3", this._title],
             ["form", { submit: this._onFormSubmit },
                 ["p",
                     ["label", "Name ",
@@ -173,7 +177,7 @@ class FormWidget extends Widget {
                     ["em.error", this._errors.age]
                 ],
                 ["p",
-                    ["input~submit", { type: "submit", value: "Submit" }]
+                    ["button.waves-effect.waves-light.btn~submit", { type: "submit" }, "Submit"]
                 ]
             ],
             ["pre~data"]
@@ -269,7 +273,7 @@ class AppWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h1", this._title],
+            ["h2", this._title],
             this.helloWidget,
             ["hr"],
             this.timerWidget,
@@ -310,7 +314,7 @@ setTimeout(() => {
         //         icon: 'images/xmark.png'},
         // ]
     });
-}, 3000);
+}, 300000);
 
 (self as any).app = app;
 

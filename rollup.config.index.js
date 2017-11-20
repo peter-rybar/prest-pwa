@@ -27,6 +27,10 @@ export default {
         uglify({}/*, minify*/),
         copy({
             "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib/incremental-dom-min.js",
+            "node_modules/materialize-css/dist/css/materialize.min.css": "dist/lib/materialize/css/materialize.min.css",
+            "node_modules/jquery/dist/jquery.min.js": "dist/lib/jquery.min.js",
+            "node_modules/materialize-css/dist/js/materialize.min.js": "dist/lib/materialize/js/materialize.min.js",
+            "node_modules/materialize-css/dist/fonts/": "dist/lib/materialize/fonts/",
             verbose: true
         })
     ],
