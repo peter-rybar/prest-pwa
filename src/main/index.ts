@@ -310,7 +310,7 @@ setTimeout(() => {
         //         icon: 'images/xmark.png'},
         // ]
     });
-}, 3000);
+}, 300000);
 
 (self as any).app = app;
 

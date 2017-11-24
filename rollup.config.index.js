@@ -26,7 +26,9 @@ export default {
         // }),
         uglify({}/*, minify*/),
         copy({
-            "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib/incremental-dom-min.js",
+            "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib//incremental-dom-min.js",
+            "node_modules/material-design-lite/dist/material.min.css": "dist/lib/material-design-lite/material.min.css",
+            "node_modules/material-design-lite/dist/material.min.js": "dist/lib/material-design-lite/material.min.js",
             verbose: true
         })
     ],
