@@ -4,6 +4,7 @@ import { Widget } from "./prest/jsonml/jsonml-widget";
 import { Signal } from "./prest/signal";
 import { swInit, showNotification } from "./sw-lib";
 
+declare const mdc: any;
 
 class HelloWidget extends Widget {
 
@@ -22,6 +23,7 @@ class HelloWidget extends Widget {
 
     onMount() {
         console.log("onMount", this.type, this.id);
+        mdc.textField.MDCTextField.attachTo(this.refs["f"]);
     }
 
     onUmount() {
@@ -30,8 +32,24 @@ class HelloWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["input~i", { type: "text", value: this._name, input: this._onTextInput }],
-            ["p", "Hello ", ["strong", this._name], " !"]
+            ["h2.mdc-typography--title", this.type],
+            ["label.mdc-text-field~f",
+                ["input.mdc-text-field__input~i",
+                    {
+                        id: `${this.id}-i`,
+                        type: "text",
+                        value: this._name,
+                        input: this._onTextInput
+                    }
+                ],
+                ["span.mdc-text-field__label", "Name"],
+                ["div.mdc-text-field__bottom-line"]
+            ],
+            ["p.mdc-typography--headline",
+                "Hello ",
+                ["strong", this._name],
+                " !"
+            ]
         ];
     }
 
@@ -74,6 +92,7 @@ class TimerWidget extends Widget {
 
     onMount() {
         console.log("onMount", this.type, this.id);
+        mdc.ripple.MDCRipple.attachTo(this.refs["b"]);
         this.toggle(true);
     }
 
@@ -84,9 +103,15 @@ class TimerWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["p", { style: this._interval ? "" : "color: lightgray;" },
-                "Time: ", new Date().toLocaleTimeString(), " ",
-                ["button", { click: (e: Event) => this.toggle() },
+            ["h2.mdc-typography--title", this.type],
+            ["p.mdc-typography--headline",
+                "Time: ",
+                ["strong", { style: this._interval ? "" : "color: lightgray;" },
+                    new Date().toLocaleTimeString(),
+                ],
+                " ",
+                ["button.mdc-button.mdc-button--raised.mdc-ripple-surface~b",
+                    { click: (e: Event) => this.toggle() },
                     this._interval ? "Stop" : "Start"
                 ]
             ]
@@ -140,6 +165,8 @@ class FormWidget extends Widget {
 
     onMount() {
         console.log("onMount", this.type, this.id);
+        mdc.textField.MDCTextField.attachTo(this.refs["f-name"]);
+        mdc.textField.MDCTextField.attachTo(this.refs["f-age"]);
     }
 
     onUmount() {
@@ -148,32 +175,79 @@ class FormWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h2", this._title],
-            ["form", { submit: this._onFormSubmit },
-                ["p",
-                    ["label", "Name ",
-                        ["input~name",
+            ["h2.mdc-typography--title",
+                this.type, " ",
+                ["span.mdc-typography--caption.mdc-typography--adjust-margin",
+                    this._title
+                ]
+            ],
+            ["form", { action: "#", submit: this._onFormSubmit },
+                ["div",
+                    ["label.mdc-text-field~f-name",
+                        ["input.mdc-text-field__input~name",
                             {
-                                type: "text", size: 10, maxlength: 10,
+                                type: "text",
+                                required: "",
+                                pattern: ".{3,10}",
+                                size: 10, maxlength: 10,
+                                "aria-controls": "name-helptext",
+                                autocomplete: "name",
                                 input: this._onNameInput
                             }
-                        ]
-                    ], " ",
-                    ["em.error", this._errors.name]
+                        ],
+                        ["span.mdc-text-field__label",
+                            "Name"
+                        ],
+                        ["div.mdc-text-field__bottom-line"]
+                    ],
+                    ["p#name-helptext",
+                        {
+                            classes: [
+                                "mdc-text-field-helptext",
+                                "mdc-text-field-helptext--persistent-",
+                                "mdc-text-field-helptext--validation-msg"
+                            ],
+                            "aria-hidden": "true"
+                        },
+                        "Min 3, max 10 characters", ["br"],
+                        this._errors.name
+                    ],
                 ],
-                ["p",
-                    ["label", "Age ",
-                        ["input~age",
+                ["div",
+                    ["label.mdc-text-field~f-age",
+                        ["input.mdc-text-field__input~age",
                             {
-                                type: "number", min: "1", max: "120",
+                                type: "number",
+                                required: "",
+                                // pattern: ".{3,10}",
+                                // size: 20, maxlength: 10,
+                                min: "1", max: "120",
+                                "aria-controls": "age-helptext",
+                                autocomplete: "age",
                                 input: this._onAgeInput
                             }
-                        ]
-                    ], " ",
-                    ["em.error", this._errors.age]
+                        ],
+                        ["span.mdc-text-field__label",
+                            "age"
+                        ],
+                        ["div.mdc-text-field__bottom-line"]
+                    ],
+                    ["p#age-helptext",
+                        {
+                            classes: [
+                                "mdc-text-field-helptext",
+                                "mdc-text-field-helptext--persistent-",
+                                "mdc-text-field-helptext--validation-msg"
+                            ],
+                            "aria-hidden": "true"
+                        },
+                        "Min 3, max 10 characters", ["br"],
+                        this._errors.age
+                    ],
                 ],
-                ["p",
-                    ["input~submit", { type: "submit", value: "Submit" }]
+                ["button.mdc-button.mdc-button--raised.mdc-ripple-surface~submit",
+                    { type: "submit" },
+                    "Submit"
                 ]
             ],
             ["pre~data"]
@@ -183,6 +257,7 @@ class FormWidget extends Widget {
     private _onFormSubmit = (e: Event) => {
         e.preventDefault();
         console.log("submit", this._data);
+        (this.refs["submit"] as HTMLButtonElement).focus();
         this._validateName((this.refs["name"] as HTMLInputElement).value);
         this._validateAge((this.refs["age"] as HTMLInputElement).value);
         if (this._errors.name || this._errors.age) {
@@ -269,7 +344,9 @@ class AppWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["h1", this._title],
+            ["h1.mdc-typography--display1",
+                this._title
+            ],
             this.helloWidget,
             ["hr"],
             this.timerWidget,
@@ -310,7 +387,7 @@ setTimeout(() => {
         //         icon: 'images/xmark.png'},
         // ]
     });
-}, 3000);
+}, 300000);
 
 (self as any).app = app;
 

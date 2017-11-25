@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "incremental-dom": "^0.5.1",
+    "material-components-web": "^0.25.0",
     "workbox-sw": "2.1.1"
   }
 }
