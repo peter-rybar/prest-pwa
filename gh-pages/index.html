@@ -9,7 +9,7 @@
 
     <title>Progressive Web App</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="lib/material-components-web.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -23,7 +23,6 @@
             margin: 0;
             box-sizing: border-box;
         }
-
         .demo-main {
             padding-left: 16px;
             overflow: auto;
@@ -42,7 +41,7 @@
         <div class="mdc-toolbar__row">
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <button class="demo-menu material-icons mdc-toolbar__menu-icon">menu</button>
-                <span class="mdc-toolbar__title catalog-title">Temporary Drawer</span>
+                <span class="mdc-toolbar__title catalog-title">PWA demo</span>
             </section>
         </div>
     </div>
@@ -92,7 +91,7 @@
         <div id="app">Loading...</div>
     </main>
 
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script src="lib/material-components-web.min.js"></script>
     <script>
         var drawerEl = document.querySelector('.mdc-temporary-drawer');
         var MDCTemporaryDrawer = mdc.drawer.MDCTemporaryDrawer;
