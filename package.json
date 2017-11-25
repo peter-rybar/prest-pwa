@@ -14,15 +14,15 @@
     "workbox": "workbox",
     "swim": "workbox inject:manifest",
     "swim:watch": "onchange 'dist/sw.js' -v -- npm run swim",
-    "static": "cp -R src/static/* dist/",
-    "static:watch": "onchange 'src/static/*.*' -v -- npm run static",
+    "static": "mkdir -p dist/ && cp -R src/static/* dist/",
+    "static:watch": "npm run static && onchange 'src/static/*.*' -v -- npm run static",
     "clean": "rm -rf build/; rm -rf dist/",
     "clean:all": "npm run clean; rm -rf node_modules",
     "predist": "npm run clean && npm run tslint && npm run build && npm run test",
     "dist": "npm run bundle && npm run swim && npm run static",
     "dist:watch": "parallelshell 'npm run bundle:watch' 'npm run static:watch'",
     "server": "http-server dist/",
-    "dev": "npm run static && parallelshell 'npm run bundle:watch' 'npm run static:watch' 'npm run server'",
+    "dev": "parallelshell 'npm run static:watch' 'npm run bundle:watch' 'npm run server'",
     "deploy:gh-pages": "git subtree push --prefix gh-pages origin gh-pages"
   },
   "devDependencies": {
