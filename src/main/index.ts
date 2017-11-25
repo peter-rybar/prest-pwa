@@ -241,7 +241,7 @@ class FormWidget extends Widget {
                             ],
                             "aria-hidden": "true"
                         },
-                        "Min 3, max 10 characters", ["br"],
+                        "Min 1, max 120 years", ["br"],
                         this._errors.age
                     ],
                 ],
