@@ -23,7 +23,8 @@
     "dist:watch": "parallelshell 'npm run bundle:watch' 'npm run static:watch'",
     "server": "http-server dist/",
     "dev": "parallelshell 'npm run static:watch' 'npm run bundle:watch' 'npm run server'",
-    "deploy:gh-pages": "git subtree push --prefix gh-pages origin gh-pages"
+    "deploy:gh-pages": "git subtree push --prefix gh-pages origin gh-pages",
+    "undeploy:gh-pages": "git push origin --delete gh-pages"
   },
   "devDependencies": {
     "@types/assertion-error": "^1.0.30",
