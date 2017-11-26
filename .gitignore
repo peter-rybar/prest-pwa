@@ -11,7 +11,12 @@ dist
 build
 tmp
 
+<<<<<<< HEAD
 /semantic
 /semantic.json
+=======
+semantic
+semantic.json
+>>>>>>> 4c1ec8c95542841db54b40bbfc8d75573e9f9da0
 
 npm-debug.log
