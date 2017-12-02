@@ -16,6 +16,14 @@
     "revision": "a79c4c5a83f1a474a34d625cdd51df2a"
   },
   {
+    "url": "lib/material-datetime-picker.css",
+    "revision": "706c98b2abb9d9c46f27c42a49cd9b10"
+  },
+  {
+    "url": "lib/material-datetime-picker.js",
+    "revision": "e6274d93cdc621a0a03e99ed1cd6f025"
+  },
+  {
     "url": "lib/workbox-sw.js",
     "revision": "2a5638f9e33d09efc487b96804a0aa11"
   },
