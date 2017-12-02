@@ -89,6 +89,25 @@
     <main class="demo-main mdc-toolbar-fixed-adjust">
         <h1 class="mdc-typography--display1">Progressive Web App</h1>
         <div id="app">Loading...</div>
+
+        <hr/>
+
+        <a id="datepicker" class="mdc-button mdc-button--raised mdc-ripple-surface">Open DateTime Picker</a>
+        <link rel="stylesheet" href="lib/material-datetime-picker.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/rome/2.1.22/rome.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script src="lib/material-datetime-picker.js" charset="utf-8"></script>
+        <script>
+            const picker = new MaterialDatetimePicker()
+                .on('submit', (val) => console.log(`data: ${val}`))
+                .on('open', () => console.log('opened'))
+                .on('close', () => console.log('closed'));
+            document.querySelector('#datepicker')
+                .addEventListener('click', () => {
+                    console.log('open');
+                    picker.open();
+                }); 
+        </script>
     </main>
 
     <script src="lib/material-components-web.min.js"></script>

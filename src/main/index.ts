@@ -381,10 +381,10 @@ setTimeout(() => {
         //     primaryKey: 1
         // },
         // actions: [
-        //     {action: 'explore', title: 'Explore this new world',
-        //         icon: 'images/checkmark.png'},
-        //     {action: 'close', title: 'Close notification',
-        //         icon: 'images/xmark.png'},
+        //     {action: "explore", title: "Explore this new world",
+        //         icon: "images/checkmark.png"},
+        //     {action: "close", title: "Close notification",
+        //         icon: "images/xmark.png"},
         // ]
     });
 }, 300000);

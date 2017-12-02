@@ -29,6 +29,8 @@ export default {
             "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib/incremental-dom-min.js",
             "node_modules/material-components-web/dist/material-components-web.min.css": "dist/lib/material-components-web.min.css",
             "node_modules/material-components-web/dist/material-components-web.min.js": "dist/lib/material-components-web.min.js",
+            "node_modules/material-datetime-picker/dist/material-datetime-picker.js": "dist/lib/material-datetime-picker.js",
+            "node_modules/material-datetime-picker/dist/material-datetime-picker.css": "dist/lib/material-datetime-picker.css",
             verbose: true
         })
     ],
