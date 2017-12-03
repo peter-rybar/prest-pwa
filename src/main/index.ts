@@ -39,7 +39,7 @@ class MapWidget extends Widget {
         const map = L.map(element, {
             minZoom: 4,
             // maxZoom: 18,
-            zoomControl: false,
+            // zoomControl: false,
             scrollWheelZoom: true
         });
         this._map = map;
@@ -48,12 +48,12 @@ class MapWidget extends Widget {
 
         map.fitWorld();
 
-        new L.Control.Zoom({ position: "topright" }).addTo(map);
+        // new L.Control.Zoom({ position: "topright" }).addTo(map);
 
         const urlTemplate = "http://{s}.tile.osm.org/{z}/{x}/{y}.png";
         const layer: L.TileLayer = L.tileLayer(urlTemplate, {
             maxZoom: 18,
-            // attribution: "&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors",
+            attribution: `<a href="http://osm.org/copyright">OpenStreetMap</a>`,
             id: "prest-pwa.map"
         });
         map.addLayer(layer);
@@ -69,7 +69,7 @@ class MapWidget extends Widget {
         ctrl.geocoder(
             {
                 collapsed: true,
-                position: "topleft",
+                position: "topright",
                 placeholder: "Search",
                 errorMessage: "No results",
                 geocoder: new ctrl.Geocoder.Nominatim(),
@@ -105,10 +105,10 @@ class MapWidget extends Widget {
     }
 
     private _boundsLoad(): void {
-        const b = store.get("bounds");
-        if (b) {
-            const bounds = this._fromBBoxString(b);
-            this._map.fitBounds(bounds);
+        const bounds = store.get("bounds");
+        if (bounds) {
+            const b = this._fromBBoxString(bounds);
+            this._map.fitBounds(b);
         } else {
             this._map.fitWorld();
         }
@@ -123,7 +123,7 @@ class MapWidget extends Widget {
         const radius = e.accuracy / 2;
         L.marker(e.latlng)
             .addTo(this._map)
-            .bindPopup("<strong>Me</strong>, radius " + radius + "m")
+            .bindPopup("<strong>Me</strong>, radius " + radius.toFixed(0) + "&thinsp;m")
             .openPopup();
         L.circle(e.latlng, radius).addTo(this._map);
         store.set("located", true);
