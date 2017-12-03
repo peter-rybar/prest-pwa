@@ -34,6 +34,10 @@ export default {
             "node_modules/leaflet/dist/leaflet.css": "dist/lib/leaflet/leaflet.css",
             "node_modules/leaflet/dist/leaflet.js": "dist/lib/leaflet/leaflet.js",
             "node_modules/leaflet/dist/images/": "dist/lib/leaflet/images",
+            "node_modules/leaflet-control-geocoder/dist/Control.Geocoder.css": "dist/lib/leaflet-control-geocoder/Control.Geocoder.css",
+            "node_modules/leaflet-control-geocoder/dist/Control.Geocoder.js": "dist/lib/leaflet-control-geocoder/Control.Geocoder.js",
+            "node_modules/leaflet-control-geocoder/dist/images/": "dist/lib/leaflet-control-geocoder/images",
+            "node_modules/storejs/dist/store.min.js": "dist/lib/store.js",
             verbose: true
         })
     ],

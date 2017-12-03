@@ -5,6 +5,7 @@ import { swInit, showNotification } from "./sw-lib";
 
 // declare const L: any;
 import * as L from "leaflet";
+import * as store from "store";
 
 
 class MapWidget extends Widget {
@@ -35,37 +36,100 @@ class MapWidget extends Widget {
             L.Icon.Default.imagePath = this._imagePath;
         }
 
-        const map = L.map(element).fitWorld();
+        const map = L.map(element, {
+            minZoom: 4,
+            // maxZoom: 18,
+            zoomControl: false,
+            scrollWheelZoom: true
+        });
         this._map = map;
 
-        L.tileLayer(
-            "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+        map.on("load", this._onLoad);
+
+        map.fitWorld();
+
+        new L.Control.Zoom({ position: "topright" }).addTo(map);
+
+        const urlTemplate = "http://{s}.tile.osm.org/{z}/{x}/{y}.png";
+        const layer: L.TileLayer = L.tileLayer(urlTemplate, {
+            maxZoom: 18,
+            // attribution: "&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors",
+            id: "prest-pwa.map"
+        });
+        map.addLayer(layer);
+
+        map.on("moveend", this._onMoveEnd);
+
+        map.on("locationfound", this._onLocationFound);
+        map.on("locationerror", this._onLocationError);
+
+        map.locate({ setView: !store.get("located"), maxZoom: 16 });
+
+        const ctrl = (L.Control as any);
+        ctrl.geocoder(
             {
-                maxZoom: 18,
-                attribution:
-                    `Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ` +
-                    `<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ` +
-                    `Imagery © <a href="http://mapbox.com">Mapbox</a>`,
-                id: "mapbox.streets"
-            }
-        ).addTo(map);
-
-        map.on("locationfound", this.onLocationFound);
-        map.on("locationerror", this.onLocationError);
-
-        map.locate({ setView: true, maxZoom: 16 });
+                collapsed: true,
+                position: "topleft",
+                placeholder: "Search",
+                errorMessage: "No results",
+                geocoder: new ctrl.Geocoder.Nominatim(),
+                showResultIcons: false,
+                defaultMarkGeocode: false,
+            })
+            .on("markgeocode", function (e: any) {
+                // const center = e.geocode.center;
+                const bbox = e.geocode.bbox;
+                map.fitBounds(bbox);
+                // const poly = L.polygon([
+                //     bbox.getSouthEast(),
+                //     bbox.getNorthEast(),
+                //     bbox.getNorthWest(),
+                //     bbox.getSouthWest()
+                // ]).addTo(map);
+                // map.fitBounds(poly.getBounds());
+            })
+            .addTo(map);
     }
 
-    private onLocationFound = (e: L.LocationEvent) => {
+    private _onLoad = () => {
+        this._boundsLoad();
+    }
+
+    private _onMoveEnd = (e: any) => {
+        this._boundsSave();
+    }
+
+    private _boundsSave(): void {
+        const bounds = this._map.getBounds();
+        store.set("bounds", bounds.toBBoxString());
+    }
+
+    private _boundsLoad(): void {
+        const b = store.get("bounds");
+        if (b) {
+            const bounds = this._fromBBoxString(b);
+            this._map.fitBounds(bounds);
+        } else {
+            this._map.fitWorld();
+        }
+    }
+
+    private _fromBBoxString = (bbox: string): L.LatLngBounds => {
+        const [west, south, east, north] = bbox.split(",").map(parseFloat);
+        return new L.LatLngBounds(new L.LatLng(south, west), new L.LatLng(north, east));
+    }
+
+    private _onLocationFound = (e: L.LocationEvent) => {
         const radius = e.accuracy / 2;
         L.marker(e.latlng)
             .addTo(this._map)
             .bindPopup("<strong>Me</strong>, radius " + radius + "m")
             .openPopup();
         L.circle(e.latlng, radius).addTo(this._map);
+        store.set("located", true);
     }
 
-    private onLocationError = (e: L.ErrorEvent) => {
+    private _onLocationError = (e: L.ErrorEvent) => {
         alert(e.message);
     }
 

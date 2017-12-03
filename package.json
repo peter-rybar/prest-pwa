@@ -31,6 +31,7 @@
     "@types/chai": "^3.4.34",
     "@types/leaflet": "^1.2.3",
     "@types/mocha": "^2.2.33",
+    "@types/storejs": "^2.0.0",
     "chai": "^3.5.0",
     "cpx": "^1.5.0",
     "http-server": "^0.10.0",
@@ -63,6 +64,8 @@
   "dependencies": {
     "incremental-dom": "^0.5.1",
     "leaflet": "^1.2.0",
+    "leaflet-control-geocoder": "^1.5.7",
+    "storejs": "^1.0.16",
     "workbox-sw": "2.1.1"
   }
 }
