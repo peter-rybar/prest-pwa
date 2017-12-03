@@ -1,281 +1,72 @@
-
-import { JsonMLs } from "./prest/jsonml/jsonml";
 import { Widget } from "./prest/jsonml/jsonml-widget";
-import { Signal } from "./prest/signal";
+import { JsonMLs } from "./prest/jsonml/jsonml";
+
 import { swInit, showNotification } from "./sw-lib";
 
-
-class HelloWidget extends Widget {
-
-    private _name: string;
-
-    constructor(name: string) {
-        super("HelloWidget");
-        this._name = name;
-    }
-
-    setName(name: string): this {
-        this._name = name;
-        this.update();
-        return this;
-    }
-
-    onMount() {
-        console.log("onMount", this.type, this.id);
-    }
-
-    onUmount() {
-        console.log("onUmount", this.type, this.id);
-    }
-
-    render(): JsonMLs {
-        return [
-            ["input~i", { type: "text", value: this._name, input: this._onTextInput }],
-            ["p", "Hello ", ["strong", this._name], " !"]
-        ];
-    }
-
-    private _onTextInput = (e: Event) => {
-        const i = e.target as HTMLInputElement;
-        // const i = this.refs["i"] as HTMLInputElement;
-        this._name = i.value;
-        this.update();
-    }
-
-}
+// declare const L: any;
+import * as L from "leaflet";
 
 
-class TimerWidget extends Widget {
+class MapWidget extends Widget {
 
-    private _interval: number;
+    private _map: L.Map;
+    private _imagePath: string = "/lib/leaflet/images/";
 
     constructor() {
-        super("TimerWidget");
-    }
-
-    toggle(on?: boolean): void {
-        switch (on) {
-            case true:
-                if (!this._interval) {
-                    this._interval = setInterval(() => this.update(), 1000);
-                }
-                break;
-            case false:
-                if (this._interval) {
-                    clearInterval(this._interval);
-                    this._interval = undefined;
-                }
-                break;
-            default:
-                this.toggle(!this._interval);
-        }
-        this.update();
+        super("MapWidget");
     }
 
     onMount() {
-        console.log("onMount", this.type, this.id);
-        this.toggle(true);
-    }
-
-    onUmount() {
-        console.log("onUmount", this.type, this.id);
-        this.toggle(false);
+        setTimeout(() => this._render(this.refs["map"]), 0);
     }
 
     render(): JsonMLs {
         return [
-            ["p", { style: this._interval ? "" : "color: lightgray;" },
-                "Time: ", new Date().toLocaleTimeString(), " ",
-                ["button", { click: (e: Event) => this.toggle() },
-                    this._interval ? "Stop" : "Start"
-                ]
+            ["div~map", {
+                _skip: !!this._map,
+                // style: "width: 100%; height: 100vw" }
+                style: "width: 100%; height: 100%" }
             ]
         ];
     }
 
-}
-
-
-interface FormData {
-    name: string;
-    age: number;
-}
-
-interface FormErrors {
-    name: string;
-    age: string;
-}
-
-class FormWidget extends Widget {
-
-    private _title: string = "Form";
-    private _data: FormData = { name: undefined, age: undefined };
-    private _errors: FormErrors = { name: "", age: "" };
-
-    readonly sigData = new Signal<FormData>();
-
-    constructor() {
-        super("FormWidget");
-    }
-
-    getTitle(): string {
-        return this._title;
-    }
-
-    setTitle(title: string): this {
-        this._title = title;
-        this.update();
-        return this;
-    }
-
-    getData(): FormData {
-        return this._data;
-    }
-
-    setData(data: FormData): this {
-        this._data = data;
-        this.update();
-        return this;
-    }
-
-    onMount() {
-        console.log("onMount", this.type, this.id);
-    }
-
-    onUmount() {
-        console.log("onUmount", this.type, this.id);
-    }
-
-    render(): JsonMLs {
-        return [
-            ["h2", this._title],
-            ["form", { submit: this._onFormSubmit },
-                ["p",
-                    ["label", "Name ",
-                        ["input~name",
-                            {
-                                type: "text", size: 10, maxlength: 10,
-                                input: this._onNameInput
-                            }
-                        ]
-                    ], " ",
-                    ["em.error", this._errors.name]
-                ],
-                ["p",
-                    ["label", "Age ",
-                        ["input~age",
-                            {
-                                type: "number", min: "1", max: "120",
-                                input: this._onAgeInput
-                            }
-                        ]
-                    ], " ",
-                    ["em.error", this._errors.age]
-                ],
-                ["p",
-                    ["input~submit", { type: "submit", value: "Submit" }]
-                ]
-            ],
-            ["pre~data"]
-        ];
-    }
-
-    private _onFormSubmit = (e: Event) => {
-        e.preventDefault();
-        console.log("submit", this._data);
-        this._validateName((this.refs["name"] as HTMLInputElement).value);
-        this._validateAge((this.refs["age"] as HTMLInputElement).value);
-        if (this._errors.name || this._errors.age) {
-            this.update();
-        } else {
-            this.sigData.emit(this._data);
-            this.refs["data"].innerText = JSON.stringify(this._data, null, 4);
+    private _render(element: HTMLElement): void {
+        if (this._imagePath) {
+            L.Icon.Default.imagePath = this._imagePath;
         }
-    }
 
-    private _onNameInput = (e: Event) => {
-        const i = e.target as HTMLInputElement;
-        // const i = this.refs["name"] as  HTMLInputElement;
-        console.log("name", i.value);
-        this._validateName(i.value);
-        this.update();
-    }
+        const map = L.map(element).fitWorld();
+        this._map = map;
 
-    private _onAgeInput = (e: Event) => {
-        const i = e.target as HTMLInputElement;
-        // const i = this.refs["age"] as  HTMLInputElement;
-        console.log("age", i.value);
-        this._validateAge(i.value);
-        this.update();
-    }
-
-    private _validateName(name: string) {
-        if (name) {
-            this._data.name = name;
-            this._errors.name = "";
-        } else {
-            this._data.name = undefined;
-            this._errors.name = "Name required";
-        }
-    }
-
-    private _validateAge(age: string) {
-        if (age) {
-            if (isNaN(+age)) {
-                this._data.age = undefined;
-                this._errors.age = "Invalid age number";
-            } else {
-                this._data.age = +age;
-                this._errors.age = "";
+        L.tileLayer(
+            "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+            {
+                maxZoom: 18,
+                attribution:
+                    `Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ` +
+                    `<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ` +
+                    `Imagery © <a href="http://mapbox.com">Mapbox</a>`,
+                id: "mapbox.streets"
             }
-        } else {
-            this._data.age = undefined;
-            this._errors.age = "Age required";
-        }
+        ).addTo(map);
+
+        map.on("locationfound", this.onLocationFound);
+        map.on("locationerror", this.onLocationError);
+
+        map.locate({ setView: true, maxZoom: 16 });
     }
 
-}
-
-
-class AppWidget extends Widget {
-
-    private _title: string = "App";
-
-    readonly helloWidget: HelloWidget;
-    readonly timerWidget: TimerWidget;
-    readonly formWidget: FormWidget;
-
-    constructor() {
-        super("AppWidget");
-        this.helloWidget = new HelloWidget("peter");
-        this.timerWidget = new TimerWidget();
-        this.formWidget = new FormWidget();
-        this.formWidget.sigData.connect(data => console.log("sig data", data));
+    private onLocationFound = (e: L.LocationEvent) => {
+        const radius = e.accuracy / 2;
+        L.marker(e.latlng)
+            .addTo(this._map)
+            .bindPopup("<strong>Me</strong>, radius " + radius + "m")
+            .openPopup();
+        L.circle(e.latlng, radius).addTo(this._map);
     }
 
-    setTitle(title: string): this {
-        this._title = title;
-        this.update();
-        return this;
-    }
-
-    onMount() {
-        console.log("onMount", this.type, this.id);
-    }
-
-    onUmount() {
-        console.log("onUmount", this.type, this.id);
-    }
-
-    render(): JsonMLs {
-        return [
-            ["h1", this._title],
-            this.helloWidget,
-            ["hr"],
-            this.timerWidget,
-            ["hr"],
-            this.formWidget
-        ];
+    private onLocationError = (e: L.ErrorEvent) => {
+        alert(e.message);
     }
 
 }
@@ -283,15 +74,9 @@ class AppWidget extends Widget {
 
 swInit();
 
-const app = new AppWidget();
+const app = new MapWidget();
+app.mount();
 
-app.setTitle("MyApp");
-app.helloWidget.setName("Peter");
-app.formWidget.setTitle("MyForm");
-
-app.mount(document.getElementById("app"));
-
-// app.mount(document.getElementById(app.id)); // SSR - server side rendering
 
 setTimeout(() => {
     showNotification("Notif title", {
@@ -304,10 +89,10 @@ setTimeout(() => {
         //     primaryKey: 1
         // },
         // actions: [
-        //     {action: 'explore', title: 'Explore this new world',
-        //         icon: 'images/checkmark.png'},
-        //     {action: 'close', title: 'Close notification',
-        //         icon: 'images/xmark.png'},
+        //     {action: "explore", title: "Explore this new world",
+        //         icon: "images/checkmark.png"},
+        //     {action: "close", title: "Close notification",
+        //         icon: "images/xmark.png"},
         // ]
     });
 }, 3000);

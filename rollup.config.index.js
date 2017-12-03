@@ -1,4 +1,6 @@
 import typescript from 'rollup-plugin-typescript';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace'
 // import babel   from 'rollup-plugin-babel'
 // import es2015 from 'babel-preset-es2015-rollup';
@@ -15,6 +17,8 @@ console.log(`rollup bindling: '${bundle}'`);
 export default {
     entry: `./src/main/${bundle}.ts`,
     plugins: [
+        resolve(),
+        commonjs(),
         typescript({
             typescript: require('typescript')
         }),
@@ -27,6 +31,9 @@ export default {
         uglify({}/*, minify*/),
         copy({
             "node_modules/incremental-dom/dist/incremental-dom-min.js": "dist/lib/incremental-dom-min.js",
+            "node_modules/leaflet/dist/leaflet.css": "dist/lib/leaflet/leaflet.css",
+            "node_modules/leaflet/dist/leaflet.js": "dist/lib/leaflet/leaflet.js",
+            "node_modules/leaflet/dist/images/": "dist/lib/leaflet/images",
             verbose: true
         })
     ],
