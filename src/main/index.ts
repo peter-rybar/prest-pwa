@@ -10,7 +10,7 @@ import * as L from "leaflet";
 class MapWidget extends Widget {
 
     private _map: L.Map;
-    private _imagePath: string = "/lib/leaflet/images/";
+    private _imagePath: string = "lib/leaflet/images/";
 
     constructor() {
         super("MapWidget");
