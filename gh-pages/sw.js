@@ -1,7 +1,7 @@
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o():"function"==typeof define&&define.amd?define(o):o()}(0,function(){"use strict";importScripts("lib/workbox-sw.js"),(new WorkboxSW).precache([
   {
     "url": "index.js",
-    "revision": "c71274afc940ef8f18d220b5cfb29c0e"
+    "revision": "87d414e349896fa18fd811c241094c2f"
   },
   {
     "url": "lib/incremental-dom-min.js",
