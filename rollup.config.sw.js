@@ -26,7 +26,7 @@ export default {
         // }),
         uglify({}/*, minify*/),
         copy({
-            "node_modules/workbox-sw/build/importScripts/workbox-sw.prod.v2.1.1.js": "dist/lib/workbox-sw.js",
+            "node_modules/workbox-sw/build/importScripts/workbox-sw.prod.v2.1.2.js": "dist/lib/workbox-sw.js",
             verbose: true
         })
     ],
