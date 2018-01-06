@@ -30,8 +30,12 @@ class HelloWidget extends Widget {
 
     render(): JsonMLs {
         return [
-            ["input~i", { type: "text", value: this._name, input: this._onTextInput }],
-            ["p", "Hello ", ["strong", this._name], " !"]
+            ["p",
+                ["input.w3-input~i",
+                    { type: "text", value: this._name, input: this._onTextInput }
+                ],
+                ["p", "Hello ", ["strong", this._name], " !"]
+            ]
         ];
     }
 
@@ -86,7 +90,7 @@ class TimerWidget extends Widget {
         return [
             ["p", { style: this._interval ? "" : "color: lightgray;" },
                 "Time: ", new Date().toLocaleTimeString(), " ",
-                ["button", { click: (e: Event) => this.toggle() },
+                ["button.w3-btn.w3-blue", { click: (e: Event) => this.toggle() },
                     this._interval ? "Stop" : "Start"
                 ]
             ]
@@ -149,10 +153,10 @@ class FormWidget extends Widget {
     render(): JsonMLs {
         return [
             ["h2", this._title],
-            ["form", { submit: this._onFormSubmit },
+            ["form.w3-container", { submit: this._onFormSubmit },
                 ["p",
                     ["label", "Name ",
-                        ["input~name",
+                        ["input.w3-input~name",
                             {
                                 type: "text", size: 10, maxlength: 10,
                                 input: this._onNameInput
@@ -163,7 +167,7 @@ class FormWidget extends Widget {
                 ],
                 ["p",
                     ["label", "Age ",
-                        ["input~age",
+                        ["input.w3-input~age",
                             {
                                 type: "number", min: "1", max: "120",
                                 input: this._onAgeInput
@@ -173,7 +177,7 @@ class FormWidget extends Widget {
                     ["em.error", this._errors.age]
                 ],
                 ["p",
-                    ["input~submit", { type: "submit", value: "Submit" }]
+                    ["button.w3-btn.w3-blue~submit", "Submit"]
                 ]
             ],
             ["pre~data"]
@@ -270,11 +274,17 @@ class AppWidget extends Widget {
     render(): JsonMLs {
         return [
             ["h1", this._title],
-            this.helloWidget,
+            ["div.w3-panel.w3-card-4",
+                this.helloWidget
+            ],
             ["hr"],
-            this.timerWidget,
+            ["div.w3-panel.w3-card-4",
+                this.timerWidget
+            ],
             ["hr"],
-            this.formWidget
+            ["div.w3-panel.w3-card-4",
+                this.formWidget
+            ]
         ];
     }
 
